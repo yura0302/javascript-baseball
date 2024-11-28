@@ -5,10 +5,15 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
+const startString = `
+컴퓨터가 숫자를 뽑았습니다.
+숫자를 입력해주세요:
+`;
+
 // 게임 시작 함수
 // 사용자에게 특정 값을 받아서 게임 시작 혹은 종료하는 기능
 function gameStart() {
-  //컴퓨터 랜덤 숫자 뽑기
+  // 컴퓨터 랜덤 숫자 뽑기
   let compNum = [];
   let numFound = false;
 
@@ -20,15 +25,50 @@ function gameStart() {
         // 1을 입력하면 새로운 게임 시작
         compNum = pickCompNum();
 
-        while (!numFound) {
+        const gameLoop = () => {
           rl.question(
-            "컴퓨터가 숫자를 뽑았습니다.\n숫자를 입력해주세요: ",
+            "컴퓨터가 숫자를 뽑았습니다.숫자를 입력해주세요: ",
             (userNum) => {
               const result = userNum.split("");
+
+              console.log(`사용자 입력값: ${result}`);
+
+              const { strikes, balls } = compareNum(compNum, result);
+
+              if (strikes === 0 && balls === 0) {
+                console.log("낫싱!");
+              } else {
+                console.log(`스트라이크: ${strikes}, 볼: ${balls}`);
+              }
+
+              if (strikes === 3) {
+                console.log("3개의 숫자를 모두 맞히셨습니다.");
+                console.log("게임종료!");
+                gameStart();
+              }
+
+              gameLoop();
             }
           );
-          gameStart();
-        }
+        };
+
+        gameLoop();
+
+        // while (!numFound) {
+        //   rl.question(
+        //     "컴퓨터가 숫자를 뽑았습니다.\r 숫자를 입력해주세요: ",
+        //     (userNum) => {
+        //       const result = userNum.split("").map(Number);
+
+        //       console.log(`사용자 입력값:  ${result}`);
+
+        //       const { strikes, balls } = compareNum(compNum, result);
+
+        //       console.log(strikes, balls);
+        //     }
+        //   );
+        //   gameStart();
+        // }
       } else if (command === "9") {
         // 9를 입력하면 애플리케이션 종료
         console.log("애플리케이션이 종료되었습니다.");
@@ -64,8 +104,27 @@ function pickCompNum() {
   return numbers;
 }
 
-// // 사용자와 컴퓨터 입력값 비교
-// function compareNum() {}
+// 사용자와 컴퓨터 입력값 비교
+function compareNum(compNum, userNum) {
+  let strikes = 0;
+  let balls = 0;
+
+  console.log(userNum);
+
+  const numArr = userNum.map(Number);
+
+  // 사용자 입력값 배열을 순회하면서, 컴퓨터 생성값 배열과 비교해준다
+  // num은 배열 내부의 요소 하나를 가져오는 인자, idx는 해당 요소의 index값
+  numArr.forEach((num, idx) => {
+    if (num === compNum[idx]) {
+      strikes++;
+    } else if (compNum.includes(num)) {
+      balls++;
+    }
+  });
+
+  return { strikes, balls };
+}
 
 // // 게임 종료
 // function gameEnd() {}
