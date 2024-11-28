@@ -19,6 +19,7 @@ function gameStart() {
       if (command === "1") {
         // 1을 입력하면 새로운 게임 시작
         compNum = pickCompNum();
+
         while (!numFound) {
           rl.question(
             "컴퓨터가 숫자를 뽑았습니다.\n숫자를 입력해주세요: ",
@@ -40,10 +41,28 @@ function gameStart() {
     }
   );
 }
-// 컴퓨터가 생각하는 3자리 랜덤 숫자 생성
-// function pickCompNum() {
-//   //return int arr
-// }
+
+/**컴퓨터가 생각하는 3자리 랜덤 숫자 생성 */
+function pickCompNum() {
+  // 무작위 생성될 숫자가 저장될 배열
+  const numbers = [];
+
+  // 3개의 숫자를 선정
+  // numbers 배열 내부 요소가 3개가 될 때까지 반복
+  while (numbers.length < 3) {
+    // 무작위 정수 하나를 생성
+    const randomNumber = Math.floor(Math.random() * (9 - 1 + 1)) + 1;
+
+    // 생성된 무작위 정수가 numbers 배열 내부의 값과 중복되는지 확인.
+    // 값이 중복되지 않는다면, numbers 배열에 생성된 정수를 push
+    if (!numbers.includes(randomNumber)) {
+      numbers.push(randomNumber);
+    }
+  }
+
+  // 완성된 배열을 반환.
+  return numbers;
+}
 
 // // 사용자와 컴퓨터 입력값 비교
 // function compareNum() {}
